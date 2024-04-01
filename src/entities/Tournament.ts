@@ -1,77 +1,88 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { User } from "./User"
+import { Match } from "./Match"
+import { Standing } from "./Standing"
+import { Scorer } from "./Scorer"
+import { Team } from "./Team"
 
 @Entity()
 export class Tournament {
     @PrimaryGeneratedColumn()
-    tournamentId: number;
+    tournamentId: number
 
-    @Column()
-    organizerId: number; //User
+    @ManyToOne(() => User, user => user.tournaments)
+    organizer: User
 
     @Column({
-        nullable: false
+        nullable: true
     })
-    name: string;
+    name: string
 
     @Column({
         default: new Date(),
     })
-    startDate: Date;
+    startDate: Date
 
     @Column({
         default: new Date()
     })
-    endDate: Date;
+    endDate: Date
 
     @Column({
         nullable: true
     })
-    location: string;
+    location: string
 
     @Column({
         default: "League"
     })
-    type: "League" | "Play-Off" | "Group+Play-off";
+    type: "League" | "Play-Off" | "Group+Play-off"
 
     @Column({
         default: "11v11"
     })
-    format: "2v2" | "3v3" | "4v4" | "5v5" | "6v6" | "7v7" | "8v8" | "9v9" | "10v10" | "11v11";
+    format: "2v2" | "3v3" | "4v4" | "5v5" | "6v6" | "7v7" | "8v8" | "9v9" | "10v10" | "11v11"
 
     @Column({
         default: 0
     })
-    numOfTeams: number;
+    numOfTeams: number
 
     @Column({
         default: 0
     })
-    numOfGroups: number;
-
-    @Column()
-    logo: string; //photo
-
-    @Column({
-        default: "upcoming"
-    })
-    status: "finished" | "ongoing" | "upcoming";
-
-    @Column({
-        default: "private"
-    })
-    visibility: "public" | "private"; //public,private
+    numOfGroups: number
 
     @Column({
         nullable: true
     })
-    description: string;
+    logo: string //photo
 
-    @Column()
-    matches: string; //Match
+    @Column({
+        default: "upcoming"
+    })
+    status: "finished" | "ongoing" | "upcoming"
 
-    @Column()
-    standings: string; //Standing
+    @Column({
+        default: "private"
+    })
+    visibility: "public" | "private" //public,private
 
-    @Column()
-    scorers: string; //scorer
+    @Column({
+        nullable: true
+    })
+    description: string
+
+    @ManyToMany(() => Team, team => team.tournaments)
+    @JoinTable()
+    teams: Team[]
+
+    @OneToMany(() => Match, match => match.tournament)
+    matches: Match[]
+
+    @OneToMany(() => Standing, standing => standing.tournamentId)
+    standings: Standing[]
+
+    @OneToMany(() => Scorer, scorer => scorer.tournament)
+    scorers: Scorer[]
 }

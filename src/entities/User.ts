@@ -1,40 +1,42 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Team } from "./Team"
+import { Tournament } from "./Tournament"
 
+export enum Role {
+    Player = "player",
+    Organizer = "organizer",
+    Owner = "owner",
+    TimeTracker = "timeTracker"
+}
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    userId: number;
+    userId: number
 
-    @Column({
-        unique: true
-    })
-    username: string;
+    @Column({ unique: true })
+    username: string
 
-    @Column({
-        unique: true
-    })
-    email: string;
+    @Column({ unique: true })
+    email: string
 
     @Column()
-    password: string;
+    password: string
 
-    @Column({
-        nullable: true
-    })
-    role: "player" | "organizer" | "owner" | "timeTracker";
+    @Column("simple-array", { nullable: true })
+    roles: Role[]
 
-    @Column({
-        nullable: true
-    })
-    logo: string;
+    @Column({ nullable: true })
+    logo: string
 
-    @Column({
-        nullable: true
-    })
-    teams: string;//Team
+    @Column()
+    firstName: string
 
-    @Column({
-        nullable: true
-    })
-    tournaments: string; //Tournament
+    @Column()
+    secondName: string
+
+    @OneToMany(() => Team, (team) => team.owner)
+    teams: Team[]
+
+    @OneToMany(() => Tournament, (tournament) => tournament.organizer)
+    tournaments: Tournament[]
 }
