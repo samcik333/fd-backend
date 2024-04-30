@@ -1,4 +1,4 @@
-import { getAllMatchesByFilter } from "../repositories/MatchRepository"
+import { getAllMatchesByFilter, getMatchById } from "../repositories/MatchRepository"
 import { MatchFilterParams } from "../utils/interfaces"
 
 export const getMatches = async (matchFilterParams: MatchFilterParams) => {
@@ -14,4 +14,8 @@ export const getMatches = async (matchFilterParams: MatchFilterParams) => {
 
     return matches
 
+}
+
+export const getMatch = async (id: number) => {
+    return await getMatchById(id)
 }

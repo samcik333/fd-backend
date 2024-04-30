@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken"
 
 
 export const registerUser = async (request: FastifyRequest, reply: FastifyReply) => {
+    const userRoles = []
     const { username, email, password, roles, firstName, secondName } = request.body as User
     const existingUsers = await findRegisteredUser(username, email)
     if (existingUsers.length > 0) {
@@ -15,13 +16,18 @@ export const registerUser = async (request: FastifyRequest, reply: FastifyReply)
     }
 
     const encryptedPassword = await encryptPassword(password)
-    roles.push(Role.User)
+    userRoles.push(Role.User)
+    if (roles !== undefined) {
+        roles.map(role => {
+            userRoles.push(role)
+        })
+    }
 
     const user = new User()
     user.username = username
     user.email = email
     user.password = encryptedPassword
-    user.roles = roles
+    user.roles = userRoles
     user.firstName = firstName
     user.secondName = secondName
 
@@ -29,12 +35,29 @@ export const registerUser = async (request: FastifyRequest, reply: FastifyReply)
 
     const token = jwt.sign(
         {
-            id: user.userId,
+            id: regUser.userId,
         },
-        "SlUser",
+        "FdUser",
         {
             expiresIn: "2h",
         }
     )
-
+    return reply.header('Set-Cookie', `access_token=${token}; HttpOnly; Secure; SameSite=None; Max-Age=7200; Path=/`).code(200).send({ message: "Successfully registered" })
 }
+
+// export const loginRegister = async (request: FastifyRequest, reply: FastifyReply) => {
+//     const { username, email, password } = request.body as User
+
+    
+
+//     const token = jwt.sign(
+//         {
+//             id: regUser.userId,
+//         },
+//         "FdUser",
+//         {
+//             expiresIn: "2h",
+//         }
+//     )
+//     return reply.header('Set-Cookie', `access_token=${token}; HttpOnly; Secure; SameSite=None; Max-Age=7200; Path=/`).code(200).send({ message: "Successfully registered" })
+// }
