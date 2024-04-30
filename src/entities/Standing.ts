@@ -5,54 +5,56 @@ import { Team } from "./Team"
 @Entity()
 export class Standing {
     @PrimaryGeneratedColumn()
-    standingId: number
+    standingId!: number
 
     @ManyToOne(() => Tournament, tournament => tournament.standings)
-    tournamentId: Tournament
+    tournament!: Tournament
 
     @ManyToOne(() => Team, team => team.standings)
-    team: Team
+    team!: Team
 
     @Column({
         default: 0
     })
-    position: number
+    position!: number
 
     @Column({
         default: 0
     })
-    wins: number
+    wins!: number
 
     @Column({
         default: 0
     })
-    draws: number
+    draws!: number
 
     @Column({
         default: 0
     })
-    loses: number
+    loses!: number
 
     @Column({
         default: 0
     })
-    goalsFor: number
+    goalsFor!: number
 
     @Column({
         default: 0
     })
-    goalsAgainst: number
+    goalsAgainst!: number
 
     @Column({
         default: 0
     })
-    goalDiff: number
+    goalDiff!: number
 
     @Column({
         default: 0
     })
-    points: number
+    points!: number
 
-    @Column()
-    group: string
+    @Column({
+        nullable: true
+    })
+    group!: string
 }

@@ -6,37 +6,39 @@ export enum Role {
     Player = "player",
     Organizer = "organizer",
     Owner = "owner",
-    TimeTracker = "timeTracker"
+    TimeTracker = "timeTracker",
+    Admin = "Admin",
+    User = "User"
 }
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    userId: number
+    userId!: number
 
     @Column({ unique: true })
-    username: string
+    username!: string
 
     @Column({ unique: true })
-    email: string
+    email!: string
 
     @Column()
-    password: string
+    password!: string
 
     @Column("simple-array", { nullable: true })
-    roles: Role[]
+    roles!: Role[]
 
     @Column({ nullable: true })
-    logo: string
+    logo!: string
 
     @Column()
-    firstName: string
+    firstName!: string
 
     @Column()
-    secondName: string
+    secondName!: string
 
     @OneToMany(() => Team, (team) => team.owner)
-    teams: Team[]
+    teams!: Team[]
 
     @OneToMany(() => Tournament, (tournament) => tournament.organizer)
-    tournaments: Tournament[]
+    tournaments!: Tournament[]
 }

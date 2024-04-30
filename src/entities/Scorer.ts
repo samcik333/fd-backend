@@ -5,17 +5,23 @@ import { Player } from "./Player"
 @Entity()
 export class Scorer {
     @PrimaryGeneratedColumn()
-    scorerId: number
+    scorerId!: number
 
     @ManyToOne(() => Tournament, (tournament) => tournament.scorers)
-    tournament: Tournament
+    tournament!: Tournament
 
     @ManyToOne(() => Player)
-    player: Player
+    player!: Player
 
     @Column({ default: 0 })
-    goals: number
+    goals!: number
 
     @Column({ default: 0 })
-    assists: number // Typo fixed from "asists" to "assists"
+    assists!: number
+
+    @Column({ default: 0 })
+    yellowCars!: number
+
+    @Column({ default: 0 })
+    redCards!: number
 }

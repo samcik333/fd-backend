@@ -7,44 +7,44 @@ import { MatchEvent } from "./MatchEvent"
 @Entity()
 export class Match {
     @PrimaryGeneratedColumn()
-    matchId: number
+    matchId!: number
 
     @ManyToOne(() => Tournament, (tournament) => tournament.matches)
-    tournament: Tournament
+    tournament!: Tournament
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    datetime: Date
+    datetime!: Date
 
     @Column({ nullable: true })
-    location: string
+    location!: string
 
     @Column({ default: "upcoming" })
-    status: "finished" | "live" | "upcoming"
+    status!: "finished" | "live" | "upcoming"
 
     @ManyToOne(() => Team, (team) => team.homeMatches)
-    firstTeam: Team
+    firstTeam!: Team
 
     @ManyToOne(() => Team, (team) => team.awayMatches)
-    secondTeam: Team
+    secondTeam!: Team
 
     @Column({ nullable: true })
-    scoreFirstTeam: number
+    scoreFirstTeam!: number
 
     @Column({ nullable: true })
-    scoreSecondTeam: number
+    scoreSecondTeam!: number
 
-    @Column({ default: "League" })
-    type: "League" | "Group" | "16-final" | "8-final" | "semi-final" | "final"
+    @Column()
+    type!: string
 
     @Column({ nullable: true })
-    group: string
+    group!: string
 
     @ManyToOne(() => MatchStat)
-    matchStatFirstTeam: MatchStat
+    matchStatFirstTeam!: MatchStat
 
     @ManyToOne(() => MatchStat)
-    matchStatSecondTeam: MatchStat
+    matchStatSecondTeam!: MatchStat
 
     @OneToMany(() => MatchEvent, (event) => event.match)
-    events: MatchEvent[]
+    events!: MatchEvent[]
 }

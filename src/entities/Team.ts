@@ -8,42 +8,42 @@ import { Player } from "./Player"
 @Entity()
 export class Team {
     @PrimaryGeneratedColumn()
-    teamId: number
+    teamId!: number
 
     @ManyToOne(() => User, (user) => user.teams)
-    owner: User // Changed to relation field
+    owner!: User // Changed to relation field
 
     @Column()
-    name: string
+    name!: string
 
     @Column({ nullable: true })
-    logo: string
+    logo!: string
 
     @Column({ default: 0 })
-    wins: number
+    wins!: number
 
     @Column({ default: 0 })
-    draws: number
+    draws!: number
 
     @Column({ default: 0 })
-    loses: number
+    loses!: number
 
     @Column({ nullable: true })
-    location: string
+    location!: string
 
     @ManyToMany(() => Tournament, (tournament) => tournament.teams)
-    tournaments: Tournament[]
+    tournaments!: Tournament[]
 
     @ManyToMany(() => Player, (player) => player.teams)
     @JoinTable()
-    players: Player[]
+    players!: Player[]
 
     @OneToMany(() => Match, (match) => match.firstTeam)
-    homeMatches: Match[]
+    homeMatches!: Match[]
 
     @OneToMany(() => Match, (match) => match.secondTeam)
-    awayMatches: Match[]
+    awayMatches!: Match[]
 
     @OneToMany(() => Standing, (standing) => standing.team)
-    standings: Standing[]
+    standings!: Standing[]
 }

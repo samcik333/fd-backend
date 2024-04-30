@@ -2,20 +2,27 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Match } from "./Match" // Fixed typo here
 import { Player } from "./Player"
 
+export enum eventType {
+    Goal = "goal",
+    Assist = "assist",
+    yellowCard = "yellowCard",
+    redCard = "redCard",
+}
+
 @Entity()
 export class MatchEvent {
     @PrimaryGeneratedColumn()
-    matchEventId: number
+    matchEventId!: number
 
     @ManyToOne(() => Player)
-    player: Player // Changed to relation field
+    player!: Player // Changed to relation field
 
     @ManyToOne(() => Match, (match) => match.events)
-    match: Match // Relation field, not column
-
-    @Column("timestamp")
-    time: Date // Changed to Date type for simplicity
+    match!: Match // Relation field, not column
 
     @Column()
-    type: "goal" | "assist" | "yellowCard" | "redCard"
+    time!: number // Changed to Date type for simplicity
+
+    @Column()
+    type!: eventType
 }

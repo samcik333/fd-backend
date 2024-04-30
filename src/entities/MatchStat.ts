@@ -4,43 +4,53 @@ import { Team } from "./Team"
 @Entity()
 export class MatchStat {
     @PrimaryGeneratedColumn()
-    matchStatId: number
+    matchStatId!: number
 
     @ManyToOne(() => Team)
-    team: Team
+    team!: Team
 
     @Column({
         default: 0
     })
-    totalShots: number
+    totalShots!: number
 
     @Column({
         default: 0
     })
-    shotsOnGoal: number
+    shotsOnGoal!: number
 
     @Column({
         default: 0
     })
-    saves: number
+    saves!: number
 
     @Column({
         default: 0
     })
-    corners: number
+    corners!: number
 
     @Column({
         default: 0
     })
-    offsides: number
+    freeKicks!: number
 
     @Column({
         default: 0
     })
-    redCards: number
+    fouls!: number
 
     @Column({
         default: 0
     })
-    yellowCards: number
+    offsides!: number
+
+    @Column({
+        default: 0
+    })
+    redCards!: number
+
+    @Column({
+        default: 0
+    })
+    yellowCards!: number
 }

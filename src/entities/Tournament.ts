@@ -8,81 +8,89 @@ import { Team } from "./Team"
 @Entity()
 export class Tournament {
     @PrimaryGeneratedColumn()
-    tournamentId: number
+    tournamentId!: number
 
     @ManyToOne(() => User, user => user.tournaments)
-    organizer: User
+    organizer!: User
 
     @Column({
         nullable: true
     })
-    name: string
+    name!: string
 
     @Column({
         default: new Date(),
     })
-    startDate: Date
+    startDate!: Date
 
     @Column({
         default: new Date()
     })
-    endDate: Date
+    endDate!: Date
 
     @Column({
         nullable: true
     })
-    location: string
+    location!: string
 
     @Column({
         default: "League"
     })
-    type: "League" | "Play-Off" | "Group+Play-off"
+    format!: "Group" | "Play-off" | "Group+Play-off"
 
     @Column({
         default: "11v11"
     })
-    format: "2v2" | "3v3" | "4v4" | "5v5" | "6v6" | "7v7" | "8v8" | "9v9" | "10v10" | "11v11"
+    type!: "2v2" | "3v3" | "4v4" | "5v5" | "6v6" | "7v7" | "8v8" | "9v9" | "10v10" | "11v11"
+
+    @Column()
+    stage!: string
 
     @Column({
         default: 0
     })
-    numOfTeams: number
+    numOfTeams!: number
 
     @Column({
         default: 0
     })
-    numOfGroups: number
+    numOfGroups!: number
+
+    @Column({
+        default: 0
+    })
+    numOfAdvanced!: number
 
     @Column({
         nullable: true
     })
-    logo: string //photo
+    logo!: string //photo
 
     @Column({
         default: "upcoming"
     })
-    status: "finished" | "ongoing" | "upcoming"
+    status!: "finished" | "ongoing" | "upcoming"
 
     @Column({
         default: "private"
     })
-    visibility: "public" | "private" //public,private
+    visibility!: "public" | "private" //public,private
 
     @Column({
         nullable: true
     })
-    description: string
+    description!: string
 
     @ManyToMany(() => Team, team => team.tournaments)
     @JoinTable()
-    teams: Team[]
+    teams!: Team[]
 
     @OneToMany(() => Match, match => match.tournament)
-    matches: Match[]
+    matches!: Match[]
 
-    @OneToMany(() => Standing, standing => standing.tournamentId)
-    standings: Standing[]
+    @OneToMany(() => Standing, standing => standing.tournament)
+    standings!: Standing[]
 
     @OneToMany(() => Scorer, scorer => scorer.tournament)
-    scorers: Scorer[]
+    scorers!: Scorer[]
 }

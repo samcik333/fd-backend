@@ -5,12 +5,12 @@ import { Team } from "./Team"
 @Entity()
 export class Player {
     @PrimaryGeneratedColumn()
-    playerId: number
+    playerId!: number
 
     @OneToOne(() => User)
     @JoinColumn()
-    user: User // Changed to relation field
+    user!: User // Changed to relation field
 
     @ManyToMany(() => Team, (team) => team.players)
-    teams: Team[]
+    teams!: Team[]
 }
