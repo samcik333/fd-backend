@@ -82,9 +82,9 @@ export async function insertMockData() {
         await playerRepository.save(players)
 
         const tournament = tournamentRepository.create([
-            { organizer: users[0], name: "Spain Super cup", startDate: addDays(currentDate, -5), endDate: addDays(currentDate, -2), location: "Saudi Arabia", format: "Play-off", type: "2v2", stage: "Finished", numOfTeams: 4, status: "finished", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]] },
-            { organizer: users[0], name: "Spain League", startDate: addDays(currentDate, -2), endDate: addDays(currentDate, 2), location: "Saudi Arabia", format: "Group", type: "2v2", stage: "2.round", numOfTeams: 4, numOfGroups: 1, status: "ongoing", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]] },
-            { organizer: users[0], name: "Spain Champions League", startDate: addDays(currentDate, 1), endDate: addDays(currentDate, 6), location: "Saudi Arabia", format: "Group+Play-off", type: "2v2", stage: "Not started", numOfTeams: 4, numOfGroups: 2, numOfAdvanced: 2, status: "upcoming", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]] }
+            { organizer: users[0], name: "Spain Super cup", startDate: addDays(currentDate, -5), endDate: addDays(currentDate, -2), location: "Saudi Arabia", format: "Play-off", type: "2v2", stage: "Finished", numOfTeams: 4, status: "finished", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]], numberOfPlayOffTeams: 4 },
+            { organizer: users[0], name: "Spain League", startDate: addDays(currentDate, -2), endDate: addDays(currentDate, 2), location: "Saudi Arabia", format: "Group", type: "2v2", stage: "2.round", numOfTeams: 4, numOfGroups: 1, status: "ongoing", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]], numbOfTeamsInGroup: 4 },
+            { organizer: users[0], name: "Spain Champions League", startDate: addDays(currentDate, 1), endDate: addDays(currentDate, 6), location: "Saudi Arabia", format: "Group+Play-off", type: "2v2", stage: "Not started", numOfTeams: 4, numOfGroups: 2, numOfAdvanced: 2, status: "upcoming", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]], numberOfPlayOffTeams: 2, numbOfTeamsInGroup: 2 }
         ])
 
         await tournamentRepository.save(tournament)
@@ -136,24 +136,16 @@ export async function insertMockData() {
         await matchRepository.save(matches)
 
         const matchEvents = matchEventRepository.create([
-            { player: players[1], match: matches[0], time: 30, type: eventType.Goal },
-            { player: players[5], match: matches[0], time: 30, type: eventType.Assist },
-            { player: players[1], match: matches[0], time: 45, type: eventType.Goal },
-            { player: players[5], match: matches[0], time: 45, type: eventType.Assist },
-            { player: players[1], match: matches[0], time: 50, type: eventType.Goal },
-            { player: players[5], match: matches[0], time: 50, type: eventType.Assist },
-            { player: players[1], match: matches[0], time: 80, type: eventType.Goal },
-            { player: players[5], match: matches[0], time: 80, type: eventType.Assist },
-            { player: players[1], match: matches[0], time: 88, type: eventType.Goal },
-            { player: players[5], match: matches[0], time: 88, type: eventType.Assist },
-            { player: players[3], match: matches[0], time: 33, type: eventType.Goal },
-            { player: players[7], match: matches[0], time: 33, type: eventType.Assist },
-            { player: players[3], match: matches[0], time: 75, type: eventType.Goal },
-            { player: players[7], match: matches[0], time: 75, type: eventType.Assist },
-            { player: players[3], match: matches[0], time: 84, type: eventType.Goal },
-            { player: players[7], match: matches[0], time: 84, type: eventType.Assist },
-            { player: players[1], match: matches[0], time: 35, type: eventType.yellowCard },
-            { player: players[7], match: matches[0], time: 92, type: eventType.yellowCard },
+            { player: players[1], match: matches[0], time: 30, type: eventType.Goal, half: "first", assist: players[5] },
+            { player: players[1], match: matches[0], time: 45, type: eventType.Goal, half: "first", assist: players[5] },
+            { player: players[1], match: matches[0], time: 50, type: eventType.Goal, half: "second", assist: players[5] },
+            { player: players[1], match: matches[0], time: 80, type: eventType.Goal, half: "second", assist: players[5] },
+            { player: players[1], match: matches[0], time: 88, type: eventType.Goal, half: "second", assist: players[5] },
+            { player: players[3], match: matches[0], time: 33, type: eventType.Goal, half: "first", assist: players[7] },
+            { player: players[3], match: matches[0], time: 75, type: eventType.Goal, half: "second", assist: players[7] },
+            { player: players[3], match: matches[0], time: 84, type: eventType.Goal, half: "second", assist: players[7] },
+            { player: players[1], match: matches[0], time: 35, type: eventType.yellowCard, half: "first" },
+            { player: players[7], match: matches[0], time: 92, type: eventType.yellowCard, half: "second" },
         ])
 
         await matchEventRepository.save(matchEvents)

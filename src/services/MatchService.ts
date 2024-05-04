@@ -1,21 +1,26 @@
-import { getAllMatchesByFilter, getMatchById } from "../repositories/MatchRepository"
+import { Like } from "typeorm"
+import { AppDataSource } from "../dataSource"
+import { Match } from "../entities/Match"
 import { MatchFilterParams } from "../utils/interfaces"
 
 export const getMatches = async (matchFilterParams: MatchFilterParams) => {
-    const matches = await getAllMatchesByFilter(matchFilterParams)
+    return await AppDataSource.getRepository(Match).find({
+        where: {
+            ...(matchFilterParams.tournament && { tournament: { name: Like(`%${matchFilterParams.tournament}%`) } }),
+            ...({ firstTeam: { name: Like(`%${matchFilterParams.team}%`) } } || { secondTeam: { name: Like(`%${matchFilterParams.team}%`) } }),
+            ...(matchFilterParams.status && { status: matchFilterParams.status }),
 
-    switch (matchFilterParams.sortBy) {
-        case "Status":
-            matches.sort((a, b) => a.status.localeCompare(b.status))
-            break
-        default:
-            break
-    }
-
-    return matches
+        },
+        relations: ["firstTeam", "secondTeam", "tournament"]
+    })
 
 }
 
 export const getMatch = async (id: number) => {
-    return await getMatchById(id)
+    return await AppDataSource.getRepository(Match).find({
+        where: {
+            matchId: id
+        },
+        relations: ["matchStatFirstTeam.team.players.user", "matchStatSecondTeam.team.players.user", "tournament", "events.player.user", "events.player.teams"]
+    })
 }

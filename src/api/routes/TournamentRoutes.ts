@@ -1,9 +1,16 @@
 import { FastifyInstance } from "fastify"
-import { getAllTournaments, getLatestMatchesOfTournament, getMatchesOfTournament, getStandingsForTournament, getTournament, getTurnamentPlayerStats, getUpcomingMatchesOfTournament } from "../controllers/TournamentController"
+import { createTournament, getAllTournaments, getLatestMatchesOfTournament, getMatchesOfTournament, getOwnerTournaments, getPlayerStats, getStandingsForTournament, getTeamPlayers, getTournament, getTournamentTeams, getTurnamentPlayerStats, getUpcomingMatchesOfTournament } from "../controllers/TournamentController"
+import { authorization } from "../middleware/authorization"
 
 export default async (fastify: FastifyInstance) => {
     fastify.get('/', async (request, reply) => {
         return await getAllTournaments(request)
+    })
+    fastify.get('/own', {
+        preHandler: authorization,
+        handler: async (request, reply) => {
+            return await getOwnerTournaments(request)
+        }
     })
     fastify.get('/:id', async (request, reply) => {
         return await getTournament(request)
@@ -23,10 +30,19 @@ export default async (fastify: FastifyInstance) => {
     fastify.get('/:id/playerStats', async (request, reply) => {
         return await getTurnamentPlayerStats(request)
     })
-
-    //post 
-
-    fastify.post('/', async (request, reply) => {
-
+    fastify.post('/create', {
+        preHandler: authorization,
+        handler: async (request, reply) => {
+            return await createTournament(request)
+        }
+    })
+    fastify.get('/:id/teams', async (request, reply) => {
+        return await getTournamentTeams(request)
+    })
+    fastify.get('/teams/:teamId/players', async (request, reply) => {
+        return await getTeamPlayers(request)
+    })
+    fastify.get('/:id/stats', async (request, reply) => {
+        return await getPlayerStats(request)
     })
 }

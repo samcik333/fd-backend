@@ -43,7 +43,9 @@ export class Tournament {
     })
     type!: "2v2" | "3v3" | "4v4" | "5v5" | "6v6" | "7v7" | "8v8" | "9v9" | "10v10" | "11v11"
 
-    @Column()
+    @Column({
+        default: "Not Started"
+    })
     stage!: string
 
     @Column({
@@ -60,6 +62,16 @@ export class Tournament {
         default: 0
     })
     numOfAdvanced!: number
+
+    @Column({
+        default: 0
+    })
+    numbOfTeamsInGroup!: number
+
+    @Column({
+        default: 0
+    })
+    numberOfPlayOffTeams!: 128 | 64 | 32 | 16 | 8 | 4 | 2 | 0
 
     @Column({
         nullable: true

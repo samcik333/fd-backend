@@ -4,7 +4,6 @@ import { Player } from "./Player"
 
 export enum eventType {
     Goal = "goal",
-    Assist = "assist",
     yellowCard = "yellowCard",
     redCard = "redCard",
 }
@@ -25,4 +24,10 @@ export class MatchEvent {
 
     @Column()
     type!: eventType
+
+    @ManyToOne(() => Player)
+    assist!: Player
+
+    @Column()
+    half!: "first" | "second" | "extra1" | "extra2" | "penalty"
 }

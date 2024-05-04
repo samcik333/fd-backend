@@ -10,9 +10,11 @@ const server = Fastify({ logger: true })
 const start = async () => {
     try {
         await AppDataSource.initialize()
+        server.decorateRequest('user', null)
         await server.register(cors, {
-            origin: '*', // WARNING: '*' means "allow all" and is not safe for production.
-            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+            origin: 'http://localhost:3001', // WARNING: '*' means "allow all" and is not safe for production.
+            methods: ['GET', 'POST', 'PUT', 'DELETE', "OPTIONS"],
+            credentials: true
         })
         server.register(cookie, {
             secret: "my-secret", // for cookies signature
@@ -27,8 +29,6 @@ const start = async () => {
         server.log.error(err)
         process.exit(1)
     }
-
-
 }
 
 start()

@@ -1,5 +1,4 @@
 export interface MatchFilterParams {
-    sortBy: string
     tournament: string
     team: string
     status: "finished" | "upcoming" | "live"
