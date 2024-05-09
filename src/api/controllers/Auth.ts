@@ -74,11 +74,11 @@ export const loginRegister = async (request: FastifyRequest, reply: FastifyReply
     )
     return reply.setCookie('access_token', token, {
         path: '/',
-        domain: "localhost",                // Sets the path for the cookie
-        expires: new Date(Date.now() + 720000 * 1000), // Sets the expiration time in milliseconds (7200 seconds from now)
-        secure: true,                  // Ensures the cookie is sent over HTTPS only
-        httpOnly: true,                // Ensures the cookie is not accessible through client-side scripts
-        sameSite: true          // Cookie is sent with cross-site requests
+        domain: "localhost",
+        expires: new Date(Date.now() + 720000 * 1000),
+        secure: true,
+        httpOnly: true,
+        sameSite: true
     }).code(200).send({ message: "Successful login" })
 }
 
