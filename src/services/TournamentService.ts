@@ -185,7 +185,7 @@ export const getTournamentMatches = async (id: number, type: string) => {
             group: { tournament: { tournamentId: id } },
             type
         },
-        relations: ["firstTeam", "secondTeam", "tournament"]
+        relations: ["firstTeam", "secondTeam"]
     })
 }
 
