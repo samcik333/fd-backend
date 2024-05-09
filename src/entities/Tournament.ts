@@ -1,9 +1,9 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 import { User } from "./User"
-import { Match } from "./Match"
 import { Standing } from "./Standing"
 import { Scorer } from "./Scorer"
-import { Team } from "./Team"
+import {Group} from "./Group";
+import {JoinColumn} from "typeorm";
 
 @Entity()
 export class Tournament {
@@ -34,13 +34,13 @@ export class Tournament {
     location!: string
 
     @Column({
-        default: "League"
+        default: "Group"
     })
     format!: "Group" | "Play-off" | "Group+Play-off"
 
     @Column({
         default: "11v11"
-    })
+    }) // NumberOfPlayers in one match
     type!: "2v2" | "3v3" | "4v4" | "5v5" | "6v6" | "7v7" | "8v8" | "9v9" | "10v10" | "11v11"
 
     @Column({
@@ -48,30 +48,20 @@ export class Tournament {
     })
     stage!: string
 
-    @Column({
-        default: 0
-    })
-    numOfTeams!: number
+    @Column({nullable: true})
+    numOfTeams: number
 
-    @Column({
-        default: 0
-    })
-    numOfGroups!: number
+    @Column({nullable: true})
+    numOfGroups: number
 
-    @Column({
-        default: 0
-    })
-    numOfAdvanced!: number
+    @Column({nullable: true})
+    numOfAdvanced: number
 
-    @Column({
-        default: 0
-    })
-    numbOfTeamsInGroup!: number
+    @Column({nullable: true})
+    numOfTeamsInGroup: number
 
-    @Column({
-        default: 0
-    })
-    numberOfPlayOffTeams!: 128 | 64 | 32 | 16 | 8 | 4 | 2 | 0
+    @Column({nullable: true})
+    numberOfPlayOffTeams:  32 | 16 | 8 | 4 | 2 | null
 
     @Column({
         nullable: true
@@ -83,22 +73,9 @@ export class Tournament {
     })
     status!: "finished" | "ongoing" | "upcoming"
 
-    @Column({
-        default: "private"
-    })
-    visibility!: "public" | "private" //public,private
-
-    @Column({
-        nullable: true
-    })
-    description!: string
-
-    @ManyToMany(() => Team, team => team.tournaments)
-    @JoinTable()
-    teams!: Team[]
-
-    @OneToMany(() => Match, match => match.tournament)
-    matches!: Match[]
+    @OneToMany(() => Group, group => group.tournament)
+    @JoinColumn()
+    groups!: Group[]
 
     @OneToMany(() => Standing, standing => standing.tournament)
     standings!: Standing[]

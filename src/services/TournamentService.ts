@@ -8,6 +8,7 @@ import { Scorer } from "../entities/Scorer"
 import { Team } from "../entities/Team"
 import { Player } from "../entities/Player"
 
+
 export const getTournaments = async (tournamentFilterParams: TournamentFilterParams) => {
     const tournaments = await AppDataSource.getRepository(Tournament).find({
         where: {
@@ -95,6 +96,44 @@ export const getOneTournamentOverview = async (id: number) => {
     return await AppDataSource.getRepository(Tournament).find({
         where: {
             tournamentId: id
+        },
+        relations: [
+            "organizer",
+            "groups",
+            "groups.teams",
+            "groups.matches",
+            "groups.homeTeam",
+            "groups.awayTeam",
+            "scorers",
+            "scorers.player"
+        ],
+        order: {
+            groups: {
+                groupId: "ASC"
+            }
+        }
+    })
+}
+
+export const getTournamentById = async (id: number) => {
+    return await AppDataSource.getRepository(Tournament).findOne({
+        where: {
+            tournamentId: id
+        },
+        relations: [
+            "organizer",
+            "groups",
+            "groups.teams",
+            "groups.matches",
+            "groups.homeTeam",
+            "groups.awayTeam",
+            "scorers",
+            "scorers.player",
+        ],
+        order: {
+            groups: {
+                groupId: "ASC"
+            }
         }
     })
 }
@@ -104,14 +143,14 @@ export const getLatestMatches = async (id: number) => {
 
     return await AppDataSource.getRepository(Match).find({
         where: {
-            tournament: { tournamentId: id },
+            group: { tournament: { tournamentId: id } },
             datetime: LessThanOrEqual(now)
         },
         order: {
             datetime: "DESC"
         },
         take: 3,
-        relations: ["firstTeam", "secondTeam", "tournament"]
+        relations: ["firstTeam", "secondTeam"]
     })
 }
 
@@ -120,14 +159,14 @@ export const getUpcomingMatches = async (id: number) => {
 
     return await AppDataSource.getRepository(Match).find({
         where: {
-            tournament: { tournamentId: id },
+            group: { tournament: { tournamentId: id } },
             datetime: MoreThanOrEqual(now)
         },
         order: {
             datetime: "ASC"
         },
         take: 3,
-        relations: ["firstTeam", "secondTeam", "tournament"]
+        relations: ["firstTeam", "secondTeam"]
     })
 }
 
@@ -143,7 +182,7 @@ export const getTournamentStandings = async (id: number) => {
 export const getTournamentMatches = async (id: number, type: string) => {
     return await AppDataSource.getRepository(Match).find({
         where: {
-            tournament: { tournamentId: id },
+            group: { tournament: { tournamentId: id } },
             type
         },
         relations: ["firstTeam", "secondTeam", "tournament"]
@@ -155,7 +194,7 @@ export const getStatsOfPlayers = async (id: number) => {
         where: {
             tournament: { tournamentId: id }
         },
-        relations: ["player.user"]
+        relations: ["player"]
     })
 }
 
@@ -166,7 +205,7 @@ export const create = async (tournament: Tournament) => {
 export const getTeams = async (tournamentId: number) => {
     return await AppDataSource.getRepository(Team).find({
         where: {
-            tournaments: { tournamentId }
+            groups: { tournament: { tournamentId } }
         }
     })
 }
@@ -174,7 +213,7 @@ export const getTeams = async (tournamentId: number) => {
 export const getPlayers = async (teamId: number) => {
     return await AppDataSource.getRepository(Player).find({
         where: {
-            teams: { teamId }
+            team: { teamId }
         },
         relations: ["user"]
     })
@@ -185,6 +224,10 @@ export const getStats = async (tournamentId: number) => {
         where: {
             tournament: { tournamentId }
         },
-        relations: ["player.user", "player.teams"]
+        relations: ["player", "player.team"]
     })
+}
+
+export const updateTournament = async (id: number, tournament: Tournament) => {
+    return await AppDataSource.getRepository(Tournament).update(id, tournament)
 }

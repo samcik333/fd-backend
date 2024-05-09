@@ -1,7 +1,9 @@
+import {MatchStatus} from "../entities/Match";
+
 export interface MatchFilterParams {
     tournament: string
     team: string
-    status: "finished" | "upcoming" | "live"
+    status: MatchStatus
     date: Date
 }
 

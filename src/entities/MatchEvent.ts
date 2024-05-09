@@ -1,8 +1,28 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { Match } from "./Match" // Fixed typo here
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm"
+import {Match, MatchStatus} from "./Match" // Fixed typo here
 import { Player } from "./Player"
 
 export enum eventType {
+    StartFirstHalf = "startFirstHalf",
+    stopFirstHalf = "stopFirstHalf",
+    StartSecondHalf = "startSecondHalf",
+    stopSecondHalf = "stopSecondHalf",
+
+    startFirstExtraHalf = "startFirstExtraHalf",
+    stopFirstExtraHalf = "stopFirstExtraHalf",
+    StartSecondExtraHalf = "startSecondExtraHalf",
+    StopSecondExtraHalf = "stopSecondExtraHalf",
+    StopPenalty = "stopPenalty",
+
+    PenaltyMiss = "penaltyMiss",
+    PenaltyGoal = "penaltyGoal",
+
+    // Types allowed during the match
+    Shot = "shot",
+    ShotOnGoal = "shotOnGoal",
+    FreeKick = "freeKick",
+    Foul = "foul",
+    Offside = "offside",
     Goal = "goal",
     yellowCard = "yellowCard",
     redCard = "redCard",
@@ -17,10 +37,11 @@ export class MatchEvent {
     player!: Player // Changed to relation field
 
     @ManyToOne(() => Match, (match) => match.events)
+    @JoinColumn()
     match!: Match // Relation field, not column
 
     @Column()
-    time!: number // Changed to Date type for simplicity
+    time!: Date // Changed to Date type for simplicity
 
     @Column()
     type!: eventType
@@ -29,5 +50,5 @@ export class MatchEvent {
     assist!: Player
 
     @Column()
-    half!: "first" | "second" | "extra1" | "extra2" | "penalty"
+    status!: MatchStatus
 }

@@ -1,5 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn, JoinColumn, ManyToMany } from "typeorm"
-import { User } from "./User"
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm"
 import { Team } from "./Team"
 
 @Entity()
@@ -7,10 +6,18 @@ export class Player {
     @PrimaryGeneratedColumn()
     playerId!: number
 
-    @OneToOne(() => User)
-    @JoinColumn()
-    user!: User // Changed to relation field
+    @Column()
+    firstName!: string
 
-    @ManyToMany(() => Team, (team) => team.players)
-    teams!: Team[]
+    @Column()
+    lastName!: string
+
+    @Column()
+    age!: number
+
+    @Column()
+    number!: number
+
+    @ManyToOne(() => Team, (team) => team.players)
+    team!: Team
 }

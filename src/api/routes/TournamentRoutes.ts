@@ -1,5 +1,19 @@
 import { FastifyInstance } from "fastify"
-import { createTournament, getAllTournaments, getLatestMatchesOfTournament, getMatchesOfTournament, getOwnerTournaments, getPlayerStats, getStandingsForTournament, getTeamPlayers, getTournament, getTournamentTeams, getTurnamentPlayerStats, getUpcomingMatchesOfTournament } from "../controllers/TournamentController"
+import {
+    addTeamToTournament,
+    createTournament,
+    getAllTournaments,
+    getLatestMatchesOfTournament,
+    getMatchesOfTournament,
+    getOwnerTournaments,
+    getPlayerStats,
+    getStandingsForTournament,
+    getTeamPlayers,
+    getTournament,
+    getTournamentTeams,
+    getTurnamentPlayerStats,
+    getUpcomingMatchesOfTournament, removeTeamFromTournament, startTournament
+} from "../controllers/TournamentController"
 import { authorization } from "../middleware/authorization"
 
 export default async (fastify: FastifyInstance) => {
@@ -33,7 +47,7 @@ export default async (fastify: FastifyInstance) => {
     fastify.post('/create', {
         preHandler: authorization,
         handler: async (request, reply) => {
-            return await createTournament(request)
+            return await createTournament(request, reply)
         }
     })
     fastify.get('/:id/teams', async (request, reply) => {
@@ -44,5 +58,23 @@ export default async (fastify: FastifyInstance) => {
     })
     fastify.get('/:id/stats', async (request, reply) => {
         return await getPlayerStats(request)
+    })
+    fastify.post('/:id/teams/:teamId', {
+        preHandler: authorization,
+        handler: async (request, reply) => {
+            return await addTeamToTournament(request, reply)
+        }
+    })
+    fastify.delete('/:id/teams/:teamId', {
+        preHandler: authorization,
+        handler: async (request, reply) => {
+            return await removeTeamFromTournament(request, reply)
+        }
+    })
+    fastify.post('/:id/startTournament', {
+        preHandler: authorization,
+        handler: async (request, reply) => {
+            return await startTournament(request, reply)
+        }
     })
 }

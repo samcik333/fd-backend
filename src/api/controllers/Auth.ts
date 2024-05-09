@@ -40,7 +40,7 @@ export const registerUser = async (request: FastifyRequest, reply: FastifyReply)
         },
         "FdUser",
         {
-            expiresIn: "2h",
+            expiresIn: "7d",
         }
     )
     return reply.header('Set-Cookie', `access_token=${token}; HttpOnly; Secure; SameSite=None; Max-Age=7200; Path=/`).code(200).send({ message: "Successfully registered" })
@@ -69,13 +69,13 @@ export const loginRegister = async (request: FastifyRequest, reply: FastifyReply
         },
         "FdUser",
         {
-            expiresIn: "2h",
+            expiresIn: "7d",
         }
     )
     return reply.setCookie('access_token', token, {
         path: '/',
         domain: "localhost",                // Sets the path for the cookie
-        expires: new Date(Date.now() + 7200 * 1000), // Sets the expiration time in milliseconds (7200 seconds from now)
+        expires: new Date(Date.now() + 720000 * 1000), // Sets the expiration time in milliseconds (7200 seconds from now)
         secure: true,                  // Ensures the cookie is sent over HTTPS only
         httpOnly: true,                // Ensures the cookie is not accessible through client-side scripts
         sameSite: true          // Cookie is sent with cross-site requests

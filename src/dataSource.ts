@@ -9,6 +9,7 @@ import { MatchStat } from './entities/MatchStat'
 import { eventType, MatchEvent } from './entities/MatchEvent'
 import { Scorer } from './entities/Scorer'
 import { Standing } from './entities/Standing'
+import {Group} from "./entities/Group";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -18,10 +19,11 @@ export const AppDataSource = new DataSource({
     password: "password",
     database: "dbname",
     synchronize: true,
-    logging: false,
-    entities: [User, Team, Tournament, Match, Player, MatchStat, MatchEvent, Scorer, Standing],
+    logging: true,
+    entities: [User, Team, Tournament, Match, Player, Group, MatchStat, MatchEvent, Scorer, Standing],
     migrations: [],
     subscribers: [],
+    logger: "advanced-console"
 })
 
 export async function insertMockData() {
@@ -44,6 +46,7 @@ export async function insertMockData() {
         const matchEventRepository = AppDataSource.getRepository(MatchEvent)
         const scorerRepository = AppDataSource.getRepository(Scorer)
         const standingRepository = AppDataSource.getRepository(Standing)
+        const groupRepository = AppDataSource.getRepository(Group)
 
         const users = userRepository.create([
             { username: "admin", email: "admin@gmail.com", password: "pass", roles: [Role.Admin, Role.User, Role.Organizer], firstName: "admin", secondName: "admin" },
@@ -70,21 +73,11 @@ export async function insertMockData() {
         await teamRepository.save(teams)
 
         const players = playerRepository.create([
-            { user: users[1], teams: [teams[0]] },
-            { user: users[2], teams: [teams[1]] },
-            { user: users[3], teams: [teams[2]] },
-            { user: users[4], teams: [teams[3]] },
-            { user: users[5], teams: [teams[0]] },
-            { user: users[6], teams: [teams[1]] },
-            { user: users[7], teams: [teams[2]] },
-            { user: users[8], teams: [teams[3]] },
+            {age: 25, firstName: "Jožko", lastName: "Mrkvička", number: 25, team: [teams[0]][0]},
         ])
         await playerRepository.save(players)
 
         const tournament = tournamentRepository.create([
-            { organizer: users[0], name: "Spain Super cup", startDate: addDays(currentDate, -5), endDate: addDays(currentDate, -2), location: "Saudi Arabia", format: "Play-off", type: "2v2", stage: "Finished", numOfTeams: 4, status: "finished", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]], numberOfPlayOffTeams: 4 },
-            { organizer: users[0], name: "Spain League", startDate: addDays(currentDate, -2), endDate: addDays(currentDate, 2), location: "Saudi Arabia", format: "Group", type: "2v2", stage: "2.round", numOfTeams: 4, numOfGroups: 1, status: "ongoing", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]], numbOfTeamsInGroup: 4 },
-            { organizer: users[0], name: "Spain Champions League", startDate: addDays(currentDate, 1), endDate: addDays(currentDate, 6), location: "Saudi Arabia", format: "Group+Play-off", type: "2v2", stage: "Not started", numOfTeams: 4, numOfGroups: 2, numOfAdvanced: 2, status: "upcoming", visibility: "public", teams: [teams[0], teams[1], teams[2], teams[3]], numberOfPlayOffTeams: 2, numbOfTeamsInGroup: 2 }
         ])
 
         await tournamentRepository.save(tournament)
@@ -105,47 +98,11 @@ export async function insertMockData() {
         await matchStatRepository.save(matchStats)
 
         const matches = matchRepository.create([
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[1], secondTeam: teams[3], scoreFirstTeam: 5, scoreSecondTeam: 3, type: "16-final", matchStatFirstTeam: matchStats[1], matchStatSecondTeam: matchStats[3] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[0], secondTeam: teams[2], scoreFirstTeam: 2, scoreSecondTeam: 0, type: "16-final", matchStatFirstTeam: matchStats[0], matchStatSecondTeam: matchStats[2] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[1], secondTeam: teams[3], scoreFirstTeam: 5, scoreSecondTeam: 3, type: "16-final", matchStatFirstTeam: matchStats[1], matchStatSecondTeam: matchStats[3] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[0], secondTeam: teams[2], scoreFirstTeam: 2, scoreSecondTeam: 0, type: "16-final", matchStatFirstTeam: matchStats[0], matchStatSecondTeam: matchStats[2] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[1], secondTeam: teams[3], scoreFirstTeam: 5, scoreSecondTeam: 3, type: "16-final", matchStatFirstTeam: matchStats[1], matchStatSecondTeam: matchStats[3] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[0], secondTeam: teams[2], scoreFirstTeam: 2, scoreSecondTeam: 0, type: "16-final", matchStatFirstTeam: matchStats[0], matchStatSecondTeam: matchStats[2] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[1], secondTeam: teams[3], scoreFirstTeam: 5, scoreSecondTeam: 3, type: "16-final", matchStatFirstTeam: matchStats[1], matchStatSecondTeam: matchStats[3] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[0], secondTeam: teams[2], scoreFirstTeam: 2, scoreSecondTeam: 0, type: "16-final", matchStatFirstTeam: matchStats[0], matchStatSecondTeam: matchStats[2] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[1], secondTeam: teams[3], scoreFirstTeam: 5, scoreSecondTeam: 3, type: "quater-final", matchStatFirstTeam: matchStats[1], matchStatSecondTeam: matchStats[3] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[0], secondTeam: teams[2], scoreFirstTeam: 2, scoreSecondTeam: 0, type: "quater-final", matchStatFirstTeam: matchStats[0], matchStatSecondTeam: matchStats[2] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[1], secondTeam: teams[3], scoreFirstTeam: 5, scoreSecondTeam: 3, type: "quater-final", matchStatFirstTeam: matchStats[1], matchStatSecondTeam: matchStats[3] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[0], secondTeam: teams[2], scoreFirstTeam: 2, scoreSecondTeam: 0, type: "quater-final", matchStatFirstTeam: matchStats[0], matchStatSecondTeam: matchStats[2] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[1], secondTeam: teams[3], scoreFirstTeam: 5, scoreSecondTeam: 3, type: "semi-final", matchStatFirstTeam: matchStats[1], matchStatSecondTeam: matchStats[3] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -4), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[0], secondTeam: teams[2], scoreFirstTeam: 2, scoreSecondTeam: 0, type: "semi-final", matchStatFirstTeam: matchStats[0], matchStatSecondTeam: matchStats[2] },
-            { tournament: tournament[0], datetime: addDays(currentDate, -3), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[1], secondTeam: teams[0], scoreFirstTeam: 4, scoreSecondTeam: 1, type: "final", matchStatFirstTeam: matchStats[5], matchStatSecondTeam: matchStats[4] },
-            { tournament: tournament[1], datetime: addDays(currentDate, -1), location: "Al-Hail Stadium", status: "finished", firstTeam: teams[0], secondTeam: teams[1], scoreFirstTeam: 3, scoreSecondTeam: 0, type: "1.Round", matchStatFirstTeam: matchStats[0], matchStatSecondTeam: matchStats[1] },
-            { tournament: tournament[1], datetime: addDays(currentDate, 0), location: "Al-Hail Stadium", status: "live", firstTeam: teams[2], secondTeam: teams[3], scoreFirstTeam: 1, scoreSecondTeam: 0, type: "1.Round", matchStatFirstTeam: matchStats[2], matchStatSecondTeam: matchStats[3] },
-            { tournament: tournament[1], datetime: addDays(currentDate, 1), location: "Al-Hail Stadium", status: "upcoming", firstTeam: teams[0], secondTeam: teams[3], type: "2.Round", matchStatFirstTeam: matchStats[6], matchStatSecondTeam: matchStats[7] },
-            { tournament: tournament[1], datetime: addDays(currentDate, 1), location: "Al-Hail Stadium", status: "upcoming", firstTeam: teams[1], secondTeam: teams[2], type: "2.Round", matchStatFirstTeam: matchStats[8], matchStatSecondTeam: matchStats[9] },
-            { tournament: tournament[2], datetime: addDays(currentDate, 2), location: "Al-Hail Stadium", status: "upcoming", firstTeam: teams[0], secondTeam: teams[1], type: "1.Round", group: "A" },
-            { tournament: tournament[2], datetime: addDays(currentDate, 2), location: "Al-Hail Stadium", status: "upcoming", firstTeam: teams[2], secondTeam: teams[3], type: "1.Round", group: "B" },
-            { tournament: tournament[2], datetime: addDays(currentDate, 3), location: "Al-Hail Stadium", status: "upcoming", firstTeam: teams[0], secondTeam: teams[1], type: "2.Round", group: "A" },
-            { tournament: tournament[2], datetime: addDays(currentDate, 3), location: "Al-Hail Stadium", status: "upcoming", firstTeam: teams[2], secondTeam: teams[3], type: "2.Round", group: "B" },
-            { tournament: tournament[2], datetime: addDays(currentDate, 4), location: "Al-Hail Stadium", status: "upcoming", type: "semi-final" },
-            { tournament: tournament[2], datetime: addDays(currentDate, 4), location: "Al-Hail Stadium", status: "upcoming", type: "semi-final" },
-            { tournament: tournament[2], datetime: addDays(currentDate, 5), location: "Al-Hail Stadium", status: "upcoming", type: "final" },
         ])
 
         await matchRepository.save(matches)
 
         const matchEvents = matchEventRepository.create([
-            { player: players[1], match: matches[0], time: 30, type: eventType.Goal, half: "first", assist: players[5] },
-            { player: players[1], match: matches[0], time: 45, type: eventType.Goal, half: "first", assist: players[5] },
-            { player: players[1], match: matches[0], time: 50, type: eventType.Goal, half: "second", assist: players[5] },
-            { player: players[1], match: matches[0], time: 80, type: eventType.Goal, half: "second", assist: players[5] },
-            { player: players[1], match: matches[0], time: 88, type: eventType.Goal, half: "second", assist: players[5] },
-            { player: players[3], match: matches[0], time: 33, type: eventType.Goal, half: "first", assist: players[7] },
-            { player: players[3], match: matches[0], time: 75, type: eventType.Goal, half: "second", assist: players[7] },
-            { player: players[3], match: matches[0], time: 84, type: eventType.Goal, half: "second", assist: players[7] },
-            { player: players[1], match: matches[0], time: 35, type: eventType.yellowCard, half: "first" },
-            { player: players[7], match: matches[0], time: 92, type: eventType.yellowCard, half: "second" },
         ])
 
         await matchEventRepository.save(matchEvents)
@@ -171,7 +128,6 @@ export async function insertMockData() {
         ])
 
         await scorerRepository.save(scorers)
-
 
         console.log('Mock data inserted successfully.')
     }).catch(error => {

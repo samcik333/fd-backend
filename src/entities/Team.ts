@@ -1,9 +1,10 @@
-import { Column, Entity, ManyToOne, ManyToMany, OneToMany, PrimaryGeneratedColumn, JoinColumn, JoinTable } from "typeorm"
+import {Column, Entity, ManyToOne, ManyToMany, OneToMany, PrimaryGeneratedColumn, JoinTable, JoinColumn} from "typeorm"
 import { User } from "./User"
-import { Tournament } from "./Tournament"
 import { Match } from "./Match"
 import { Standing } from "./Standing"
 import { Player } from "./Player"
+import {Group} from "./Group";
+import {MatchStat} from "./MatchStat";
 
 @Entity()
 export class Team {
@@ -15,6 +16,11 @@ export class Team {
 
     @Column()
     name!: string
+
+    @Column({
+        default: new Date(),
+    })
+    dateCreated!: Date
 
     @Column({ nullable: true })
     logo!: string
@@ -31,10 +37,7 @@ export class Team {
     @Column({ nullable: true })
     location!: string
 
-    @ManyToMany(() => Tournament, (tournament) => tournament.teams)
-    tournaments!: Tournament[]
-
-    @ManyToMany(() => Player, (player) => player.teams)
+    @OneToMany(() => Player, (player) => player.team)
     @JoinTable()
     players!: Player[]
 
@@ -46,4 +49,11 @@ export class Team {
 
     @OneToMany(() => Standing, (standing) => standing.team)
     standings!: Standing[]
+
+    @ManyToMany(() => Group, (group) => group.teams)
+    groups!: Group[]
+
+    @OneToMany(() => MatchStat, (matchStat) => matchStat.team)
+    @JoinColumn()
+    matchStats!: MatchStat[]
 }
